@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      height: 2000px;
+      /* make body scrollable, the tooltip should work after the scroll */
+    }
+
+    .tooltip {
+      /* some styles for the tooltip, you can use your own instead */
+      position: fixed;
+      padding: 10px 20px;
+      border: 1px solid #b3c9ce;
+      border-radius: 4px;
+      text-align: center;
+      font: italic 14px/1.3 sans-serif;
+      color: #333;
+      background: #fff;
+      box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <p>LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa</p>
+  <p>LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa LaLaLa</p>
+
+  <button data-tooltip="the tooltip is longer than the element">Short button</button>
+  <button data-tooltip="HTML<br>tooltip">One more button</button>
+
+  <p>Scroll the page to make buttons appear on the top, check if the tooltips show up correctly.</p>
+
+
+  <script>
+    let tooltip = null
+
+    /**
+     * @param {String} text
+     * @returns {HTMLDivElement}
+     */
+    function createTooltip(text) {
+      const div = document.createElement('div')
+
+      div.innerText = text
+      div.classList.add('tooltip')
+
+      return div
+    }
+
+    document.addEventListener('mouseover', event => {
+      const text = event.target.dataset.tooltip
+      if(text) {
+        tooltip = createTooltip(text)
+
+        const { top, left } = event.target.getBoundingClientRect()
+        const [height, heightT] = [
+          event.target.offsetHeight,
+          tooltip.offsetHeight
+        ]
+
+        const overallLeft = left
+        const overallTop = top - height * 2 - heightT - 10
+        const negativeTop = top + height + 5
+
+        tooltip.style.left = overallLeft + 'px'
+        tooltip.style.top = (overallTop >= 0 ? overallTop : negativeTop) + 'px'
+
+        document.body.append(tooltip)
+      }
+    })
+
+    document.addEventListener('mouseout', event => {
+      const text = event.target.dataset.tooltip
+      if(text && tooltip) {
+        tooltip.remove()
+        tooltip = null
+      }
+    })
+  </script>
+
+</body>
+</html>

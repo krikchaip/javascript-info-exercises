@@ -1,0 +1,27 @@
+<body>
+  <div style="height: 300px; width: 200px; overflow: auto">
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere, eligendi.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, maxime.
+    Minus voluptatibus et ea consectetur, perferendis fugiat animi ipsa dicta.
+    Sit unde at esse veniam veritatis deserunt ratione, libero commodi!
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, quidem!
+    Obcaecati nisi autem voluptates, repellendus ipsam aperiam. Libero, inventore neque!
+    A praesentium quos corporis molestias assumenda eligendi in, maiores veniam.
+    Ab excepturi debitis aliquid dolor quis reprehenderit aliquam cumque distinctio!
+    Delectus distinctio similique earum nihil rem sapiente necessitatibus facilis reprehenderit.
+  </div>
+</body>
+
+<script>
+  /**
+  * @param {HTMLElement} elem
+  */
+  function scrollbarWidth(elem) {
+    return elem.offsetWidth
+          - elem.clientWidth
+          - parseInt(getComputedStyle(elem).borderLeft, 10)
+          - parseInt(getComputedStyle(elem).borderRight, 10)
+  }
+
+  console.log(scrollbarWidth(document.body.firstElementChild))
+</script>

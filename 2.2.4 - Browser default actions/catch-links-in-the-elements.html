@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    #contents {
+      padding: 5px;
+      border: 1px green solid;
+    }
+  </style>
+</head>
+<body>
+  <fieldset id="contents">
+    <legend>#contents</legend>
+    <p>
+      How about to read
+      <a href="http://wikipedia.org" target="_blank">Wikipedia</a>
+      or visit
+      <a href="http://w3.org" target="_blank"><i>W3.org</i></a>
+      and learn about modern standards?
+    </p>
+  </fieldset>
+  <script>
+    /** @type {HTMLFieldSetElement} */
+    const contents = window.contents
+    contents.addEventListener('click', event => {
+      const a = event.target.closest('a[href]')
+      return a
+        ? !confirm(`Leave for ${a.getAttribute('href')}?`)
+          && event.preventDefault()
+        : false
+    })
+  </script>
+</body>
+</html>

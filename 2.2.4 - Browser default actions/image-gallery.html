@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #largeImg {
+      width: 550px;
+      height: 400px;
+      padding: 5px;
+      border: solid 1px #ccc;
+    }
+
+    #thumbs {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #thumbs li {
+      border: solid 1px #ccc;
+      padding: 3px;
+      margin: 0 2px;
+      float: left;
+    }
+
+    #thumbs li:hover {
+      border-color: #FF9900;
+    }
+
+    #thumbs a {
+      display: block;
+      height: 100px;
+    }
+
+    #thumbs img {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+
+  <title>Gallery</title>
+</head>
+<body>
+  <p>
+    <img
+      id="largeImg"
+      src="https://en.js.cx/gallery/img1-lg.jpg"
+      alt="Large image"
+    />
+  </p>
+  <ul id="thumbs">
+    <li>
+      <a href="https://en.js.cx/gallery/img2-lg.jpg" title="Image 2">
+        <img src="https://en.js.cx/gallery/img2-thumb.jpg"/>
+      </a>
+    </li>
+    <li>
+      <a href="https://en.js.cx/gallery/img3-lg.jpg" title="Image 3">
+        <img src="https://en.js.cx/gallery/img3-thumb.jpg"/>
+      </a>
+    </li>
+    <li>
+      <a href="https://en.js.cx/gallery/img4-lg.jpg" title="Image 4">
+        <img src="https://en.js.cx/gallery/img4-thumb.jpg"/>
+      </a>
+    </li>
+    <li>
+      <a href="https://en.js.cx/gallery/img5-lg.jpg" title="Image 5">
+        <img src="https://en.js.cx/gallery/img5-thumb.jpg"/>
+      </a>
+    </li>
+    <li>
+      <a href="https://en.js.cx/gallery/img6-lg.jpg" title="Image 6">
+        <img src="https://en.js.cx/gallery/img6-thumb.jpg"/>
+      </a>
+    </li>
+  </ul>
+</body>
+<script>
+  /** @type {HTMLImageElement} */
+  const largeImg = window.largeImg
+
+  /** @type {HTMLUListElement} */
+  const thumbs = window.thumbs
+
+  thumbs.addEventListener('click', event => {
+    event.preventDefault()
+
+    const a = event.target.closest('a[href]')
+    if(a) {
+      largeImg.src = a.href
+      largeImg.title = a.title
+    }
+  })
+</script>
+</html>

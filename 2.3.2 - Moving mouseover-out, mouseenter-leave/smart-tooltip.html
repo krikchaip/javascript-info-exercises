@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>"Smart" tooltip</title>
+  </head>
+  <style>
+    .hours {
+      color: red;
+    }
+
+    .minutes {
+      color: green;
+    }
+
+    .seconds {
+      color: blue;
+    }
+
+    .clock {
+      border: 1px dashed black;
+      padding: 5px;
+      display: inline-block;
+      background: yellow;
+      position: absolute;
+      left: 50vw;
+      top: 50vh;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: calc(100% + 5px);
+      background: #eee;
+      border: 1px brown solid;
+      padding: 3px;
+    }
+  </style>
+  <body>
+    <div id="elem" class="clock">
+      <span class="hours">12</span> : <span class="minutes">30</span> :
+      <span class="seconds">00</span>
+      <div hidden id="tooltip" class="tooltip">
+        Tooltip
+      </div>
+    </div>
+  </body>
+  <script>
+    // Here's a brief sketch of the class
+    // with things that you'll need anyway
+    class HoverIntent {
+      constructor({
+        sensitivity = 0.1, // speed less than 0.1px/ms means "hovering over an element"
+        interval = 100, // measure mouse speed once per 100ms: calculate the distance between previous and next points
+        elem,
+        over,
+        out
+      }) {
+        this.sensitivity = sensitivity
+        this.interval = interval
+        this.elem = elem
+        this.over = over
+        this.out = out
+
+        this._intervalID = NaN
+        this._lastpoint = [NaN, NaN]
+        this._s = 0
+
+        // make sure "this" is the object in event handlers.
+        this.onMouseMove = this.onMouseMove.bind(this)
+        this.onMouseOver = this.onMouseOver.bind(this)
+        this.onMouseOut = this.onMouseOut.bind(this)
+
+        // assign the handlers
+        elem.addEventListener('mousemove', this.onMouseMove)
+        elem.addEventListener('mouseover', this.onMouseOver)
+        elem.addEventListener('mouseout', this.onMouseOut)
+      }
+
+      onMouseOver(event) {
+        this._intervalID = setInterval(() => {
+          const v = this._s / this.interval
+
+          if (v <= this.sensitivity) {
+            this.over()
+          }
+
+          this._s = 0
+        }, this.interval)
+      }
+
+      onMouseOut(event) {
+        const closestClock = event.relatedTarget.closest('.clock')
+
+        this.destroy()
+        !closestClock && this.out()
+      }
+
+      /**
+       * Whenever a mouse is moving, calculate distance.
+       * @param {MouseEvent} event
+       */
+      onMouseMove(event) {
+        const point = [event.clientX, event.clientY]
+
+        if (this._lastpoint.some(isNaN)) {
+          this._lastpoint[0] = point[0]
+          this._lastpoint[1] = point[1]
+        }
+
+        // prettier-ignore
+        this._s += Math.sqrt(
+          Math.pow(point[0] - this._lastpoint[0], 2) +
+          Math.pow(point[1] - this._lastpoint[1], 2)
+        )
+        this._lastpoint = point
+      }
+
+      destroy() {
+        /* your code to "disable" the functionality, remove all handlers */
+        clearInterval(this._intervalID)
+
+        this._intervalID = NaN
+        this._lastpoint = [NaN, NaN]
+        this._s = 0
+      }
+    }
+  </script>
+  <script>
+    // the object will track mouse and call over/out
+    new HoverIntent({
+      elem,
+      over() {
+        tooltip.hidden = false
+      },
+      out() {
+        tooltip.hidden = true
+      }
+    })
+  </script>
+</html>

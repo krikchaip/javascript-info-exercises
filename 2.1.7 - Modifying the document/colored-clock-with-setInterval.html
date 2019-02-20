@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <div id="clock"></div>
+
+  <!-- click on this button calls clockStart() -->
+  <input type="button" onclick="clockStart()" value="Start">
+
+  <!-- click on this button calls clockStop() -->
+  <input type="button" onclick="clockStop()" value="Stop">
+
+</body>
+</html>
+
+<script>
+  const clock = document.getElementById('clock')
+
+  const hour = document.createElement('span')
+  const minute = document.createElement('span')
+  const second = document.createElement('span')
+
+  hour.style.color = 'red'
+  minute.style.color = 'green'
+  second.style.color = 'blue'
+
+  hour.textContent = '00'
+  minute.textContent = '00'
+  second.textContent = '00'
+
+  clock.append(hour, ':', minute, ':', second)
+</script>
+
+<script>
+  let intervalID, lock = false
+
+  function clockStart() {
+    if(lock) return
+    lock = true
+    intervalID = setInterval(() => {
+      const now = new Date()
+      const [h, m, s] = [now.getHours(), now.getMinutes(), now.getSeconds()]
+
+      hour.textContent = h < 10 ? `0${h}` : h
+      minute.textContent = m < 10 ? `0${m}` : m
+      second.textContent = s < 10 ? `0${s}` : s
+    }, 1000)
+  }
+
+  function clockStop() {
+    lock = false
+    clearInterval(intervalID)
+  }
+</script>

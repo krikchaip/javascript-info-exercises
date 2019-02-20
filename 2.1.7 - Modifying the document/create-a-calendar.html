@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    td,
+    th {
+      border: 1px solid black;
+      padding: 3px;
+      text-align: center;
+    }
+
+    th {
+      font-weight: bold;
+      background-color: #E6E6E6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="calendar"></div>
+
+  <script>
+    /**
+    * @param {HTMLElement} elem
+    * @param {number} year
+    * @param {number} month
+    */
+    function createCalendar(elem, year, month) {
+      // ...your code that generates the calendar in elem...
+      elem.innerHTML = `
+        <table>
+          <tbody>
+            <tr>
+              <th>MO</th>
+              <th>TU</th>
+              <th>WE</th>
+              <th>TH</th>
+              <th>FR</th>
+              <th>SA</th>
+              <th>SU</th>
+            </tr>
+          </tbody>
+        </table>
+      `
+
+      const tbody = elem.querySelector('tbody')
+
+      let now = new Date(year, month - 1)
+      let day = now.getDay()
+
+      while(true) {
+        const tr = document.createElement('tr')
+
+        for(let i = 0; i < 7; i++) {
+          const td = document.createElement('td')
+          if(i === (day + 6) % 7 && now.getMonth() === month - 1) {
+            td.textContent = now.getDate()
+            now.setDate(now.getDate() + 1)
+            day = now.getDay()
+          }
+          tr.append(td)
+        }
+        tbody.append(tr)
+
+        if(now.getMonth() !== month - 1) {
+          break
+        }
+      }
+    }
+
+    createCalendar(calendar, 2018, 12);
+  </script>
+
+</body>
+</html>

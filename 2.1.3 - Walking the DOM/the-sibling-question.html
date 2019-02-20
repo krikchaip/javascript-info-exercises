@@ -1,0 +1,22 @@
+<html>
+<body>
+  <div>Users:</div>
+  <ul>
+    <li>John</li>
+    <li>Pete</li>
+  </ul>
+</body>
+</html>
+
+<script>
+  // If elem – is an arbitrary DOM element node
+  const elem = document.body.children[1]
+
+  // Is it true that elem.lastChild.nextSibling is always null?
+  // ans: yes, because "lastChild" means last node and it's always the last one.
+  console.log(elem.lastChild.nextSibling)
+
+  // Is it true that elem.children[0].previousSibling is always null ?
+  // ans: not always because previousSibling could be text node.
+  console.log(elem.children[0].previousSibling)
+</script>

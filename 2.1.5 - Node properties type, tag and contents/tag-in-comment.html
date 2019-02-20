@@ -1,0 +1,12 @@
+<body>
+<script>
+  let body = document.body;
+
+  body.innerHTML = "<!--" + body.tagName + "-->";
+
+  alert( body.firstChild.data ); // what's here?
+
+  // ans: undefined (wrong)
+  // solution: BODY (.data returns the content of a non-element node)
+</script>
+</body>

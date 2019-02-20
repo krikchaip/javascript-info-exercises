@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    #field {
+      width: 200px;
+      height: 150px;
+      border: 10px solid black;
+      background-color: #00FF00;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    #field::after {
+      content:
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+        '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . ';
+      -webkit-user-select: none;
+    }
+
+    #ball {
+      position: absolute;
+      top: 0;
+      left: 0;
+      -webkit-user-select: none;
+      transition: all 1s ease;
+    }
+  </style>
+</head>
+<body style="height:2000px">
+  Click on a field to move the ball there.<br>
+  The ball should never leave the field.
+
+  <div id="field">
+    <img src="https://en.js.cx/clipart/ball.svg" id="ball">
+  </div>
+
+  <script>
+    const field = document.getElementById('field')
+    const ball = document.getElementById('ball')
+
+    field.addEventListener('click', function (event) {
+      const { top, left } = this.getBoundingClientRect()
+      const ballOffset = {
+        x: ball.clientWidth / 2,
+        y: ball.clientHeight / 2
+      }
+
+      const totalY = event.clientY - top - this.clientTop - ballOffset.y
+      const totalX = event.clientX - left - this.clientLeft - ballOffset.x
+
+      const maxY = this.clientHeight - ball.clientHeight
+      const maxX = this.clientWidth - ball.clientWidth
+
+      ball.style.top = (
+          totalY < 0    ? 0
+        : totalY > maxY ? maxY
+        : totalY
+      ) + 'px'
+      ball.style.left = (
+          totalX < 0    ? 0
+        : totalX > maxX ? maxX
+        : totalX
+      ) + 'px'
+    })
+  </script>
+</body>
+</html>

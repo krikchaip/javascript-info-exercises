@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Slider</title>
+  </head>
+  <style>
+    .slider {
+      border-radius: 5px;
+      background: #e0e0e0;
+      background: linear-gradient(left top, #e0e0e0, #eeeeee);
+      width: 310px;
+      height: 15px;
+      margin: 5px;
+      position: relative;
+    }
+
+    .thumb {
+      width: 10px;
+      height: 25px;
+      border-radius: 3px;
+      position: absolute;
+      left: 0;
+      top: -5px;
+      background: blue;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div id="slider" class="slider">
+      <div class="thumb"></div>
+    </div>
+  </body>
+  <script>
+    /** @type {HTMLDivElement} */
+    const thumb = document.querySelector('.thumb')
+
+    thumb.addEventListener('mousedown', function(mousedown) {
+      /** @type {HTMLDivElement} */
+      const slider = thumb.closest('.slider')
+
+      const hookX = mousedown.clientX - thumb.getBoundingClientRect().left
+
+      document.addEventListener('mousemove', moveHorizontal)
+      document.addEventListener('mouseup', cleanup)
+
+      /**
+       * @param {MouseEvent} mousemove
+       */
+      function moveHorizontal(mousemove) {
+        const { left, right } = slider.getBoundingClientRect()
+        const relative = mousemove.clientX - left - hookX
+        const range = [0, right - left - thumb.offsetWidth]
+
+        // prettier-ignore
+        const x =
+          relative <= range[0] ? range[0] :
+          relative >= range[1] ? range[1] : relative
+
+        thumb.style.left = `${x}px`
+      }
+
+      function cleanup() {
+        document.removeEventListener('mousemove', moveHorizontal)
+        document.removeEventListener('mouseup', cleanup)
+      }
+    })
+  </script>
+</html>

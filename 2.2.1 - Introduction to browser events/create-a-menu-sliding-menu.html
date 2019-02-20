@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="collapse-button" data-arrow="▶">
+    Sweeties (click me)!
+  </div>
+  <ul class="collapse" hidden>
+    <li>Cake</li>
+    <li>Donut</li>
+    <li>Honey</li>
+  </ul>
+</body>
+<style>
+  .collapse-button {
+    cursor: pointer;
+    width: fit-content;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .collapse-button::before {
+    content: attr(data-arrow);
+    color: green;
+    display: inline-block;
+    width: 1em;
+  }
+
+  .collapse {
+    margin: 0;
+    list-style: none;
+    padding-left: 1.5rem;
+  }
+</style>
+<script>
+  const button = document.querySelector('.collapse-button')
+  const collapse = document.querySelector('.collapse')
+
+  let toggleState = false
+
+  button.addEventListener('click', function () {
+    button.dataset.arrow = toggleState ? '▼' : '▶'
+    collapse.hidden = !toggleState
+    toggleState = !toggleState
+  })
+</script>
+</html>

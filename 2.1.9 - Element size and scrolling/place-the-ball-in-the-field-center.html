@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<body>
+  <div id="field">
+    <img src="https://en.js.cx/clipart/ball.svg" id="ball">
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  </div>
+</body>
+
+<style>
+  #field {
+    width: 200px;
+    border: 10px groove black;
+    background-color: #00FF00;
+    position: relative;
+  }
+
+  #ball {
+    position: absolute;
+  }
+</style>
+
+<script>
+  const field = document.getElementById('field')
+  const ball = document.getElementById('ball')
+
+  class CenterPoint {
+    /**
+     * @param {Number} x
+     * @param {Number} y
+     */
+    constructor(x, y) {
+      this.x = x
+      this.y = y
+    }
+
+    /**
+     * @param {HTMLElement} elem
+     */
+    static from(elem) {
+      return new CenterPoint(
+        Math.round(elem.clientWidth / 2),
+        Math.round(elem.clientHeight / 2)
+      )
+    }
+
+    /**
+     * @param {CenterPoint} pointB
+     */
+    subtract(pointB) {
+      return new CenterPoint(
+        this.x - pointB.x,
+        this.y - pointB.y
+      )
+    }
+  }
+
+  /**
+   * @param {HTMLElement} elem
+   * @param {CenterPoint} offset
+   */
+  function setOffset(elem, offset) {
+    elem.style.left = `${offset.x}px`
+    elem.style.top = `${offset.y}px`
+  }
+
+  setOffset(ball, CenterPoint.from(field).subtract(CenterPoint.from(ball)))
+</script>

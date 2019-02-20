@@ -1,0 +1,16 @@
+<html>
+
+<body>
+  <script>
+    alert(document.body.lastChild.nodeType)
+
+    // ans: TEXT (wrong)
+    // solution: 1 (element node)
+
+    // At the time of <script> execution
+    // the last DOM node is exactly <script>,
+    // because the browser did not process the rest of the page yet.
+  </script>
+</body>
+
+</html>

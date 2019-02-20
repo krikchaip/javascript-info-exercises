@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    .arrow {
+      padding: 0;
+      background: #ddd;
+      border-radius: 15px;
+      border: 1px solid gray;
+      font-size: 24px;
+      line-height: 24px;
+      color: #444;
+      display: block;
+    }
+
+    .arrow:focus {
+      outline: none;
+    }
+
+    .arrow:hover {
+      background: #ccc;
+      cursor: pointer;
+    }
+  </style>
+
+  <style>
+    .carousel {
+      --c-padding-x: 40px;
+
+      position: relative;
+      border-radius: 15px;
+      background: #eee;
+      border: 1px solid #ccc;
+      width: fit-content;
+      padding: 10px var(--c-padding-x);
+    }
+
+    .carousel__slide {
+      position: absolute;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: var(--c-padding-x);
+      height: 100%;
+      background-color: #263238;
+    }
+
+    .carousel__slide.left {
+      border-top-left-radius: inherit;
+      border-bottom-left-radius: inherit;
+    }
+
+    .carousel__slide.right {
+      border-top-right-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
+
+    .carousel__container {
+      --img-width: 130px;
+      --img-height: 130px;
+      --img-per-screen: 3;
+
+      width: calc(var(--img-width) * var(--img-per-screen));
+      overflow: hidden;
+    }
+
+    .carousel__list {
+      display: flex;
+      list-style: none;
+      width: fit-content;
+      margin: 0;
+      transition: transform 0.3s ease;
+      -webkit-margin-before: 0;
+      -webkit-margin-after: 0;
+      -webkit-margin-start: 0;
+      -webkit-margin-end: 0;
+      -webkit-padding-start: 0;
+    }
+
+    .carousel__item {
+      width: var(--img-width);
+      height: var(--img-height);
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel">
+    <div class="carousel__slide left" style="left: 0">
+      <button class="arrow">⇦</button>
+    </div>
+    <div class="carousel__slide right" style="right: 0">
+      <button class="arrow">⇨</button>
+    </div>
+    <div class="carousel__container" style="--img-per-screen: 2">
+      <ul class="carousel__list">
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/1.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/2.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/3.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/4.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/5.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/6.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/7.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/8.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/9.png">
+        </li>
+        <li class="carousel__item">
+          <img src="https://en.js.cx/carousel/10.png">
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+<script>
+  const carouselList =
+    document.querySelector('.carousel .carousel__list')
+  const carouselContainer =
+    document.querySelector('.carousel .carousel__container')
+  const [carouselLeft, carouselRight] =
+    document.querySelectorAll('.carousel .carousel__slide > .arrow')
+
+  let scrollState = 0
+
+  carouselRight.addEventListener('click', function () {
+    const spaces = parseInt(getComputedStyle(carouselContainer).width, 10)
+    const max = parseInt(getComputedStyle(carouselList).width, 10) - spaces
+
+    if(scrollState < max) {
+      carouselList.style.transform =`translateX(-${scrollState + spaces}px)`
+      scrollState += spaces
+    }
+  })
+
+  carouselLeft.addEventListener('click', function () {
+    const spaces = parseInt(getComputedStyle(carouselContainer).width, 10)
+
+    if(scrollState > 0) {
+      carouselList.style.transform =`translateX(-${scrollState - spaces}px)`
+      scrollState -= spaces
+    }
+  })
+</script>
+</html>

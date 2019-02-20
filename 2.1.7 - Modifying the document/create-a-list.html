@@ -1,0 +1,18 @@
+<body>
+  <h1>Create a list</h1>
+  <ul id='list'>
+  </ul>
+</body>
+
+<script>
+  /** @type {string} */
+  let textInput
+
+  const list = document.getElementById('list')
+
+  while(textInput = prompt('Enter the text for the list item')) {
+    const li = document.createElement('li')
+    li.textContent = textInput
+    list.append(li)
+  }
+</script>

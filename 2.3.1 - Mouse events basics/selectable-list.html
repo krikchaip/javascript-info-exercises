@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Selectable List</title>
+  </head>
+  <style>
+    .selected {
+      background: #0f0;
+    }
+
+    li {
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    Click on a list item to select it.
+    <br />
+
+    <ul id="ul">
+      <li>Christopher Robin</li>
+      <li>Winnie-the-Pooh</li>
+      <li>Tigger</li>
+      <li>Kanga</li>
+      <li>Rabbit. Just rabbit.</li>
+    </ul>
+
+    <script>
+      /**
+       * @template a
+       * @param {...((target: a) => void)} effects
+       * @return {(target: a) => void}
+       */
+      const chainEffect = (...effects) => target =>
+        effects.forEach(e => e(target))
+    </script>
+
+    <script>
+      /** @type {(e: MouseEvent) => boolean} */
+      const mouseWithModifier = e => e.ctrlKey || e.metaKey
+
+      /**
+       * @param {NodeListOf<HTMLLIElement>} list
+       * @return {(target: HTMLLIElement) => void}
+       */
+      function selectOnlyFrom(list) {
+        return target =>
+          target.addEventListener('click', e => {
+            if (mouseWithModifier(e)) return
+            list.forEach(li => li.classList.remove('selected'))
+            target.classList.add('selected')
+          })
+      }
+
+      /**
+       * @param {HTMLElement} target
+       * @return {void}
+       */
+      function selectWithModifier(target) {
+        target.addEventListener('click', e => {
+          mouseWithModifier(e) && target.classList.add('selected')
+        })
+      }
+
+      /**
+       * @param {HTMLElement} target
+       * @return {void}
+       */
+      function preventSelection(target) {
+        target.addEventListener('mousedown', e => e.preventDefault())
+      }
+    </script>
+
+    <script>
+      const lis = document.getElementById('ul').querySelectorAll('li')
+      const bindMouseEvents = chainEffect(
+        selectOnlyFrom(lis),
+        selectWithModifier,
+        preventSelection
+      )
+
+      lis.forEach(bindMouseEvents)
+    </script>
+  </body>
+</html>
