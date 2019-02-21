@@ -33,8 +33,8 @@
 - [x] **Drag'n'Drop with mouse events**
 - [x] **Keyboard: keydown and keyup**
 - [x] **Scrolling**
-- [ ] Page lifecycle: DOMContentLoaded, load, beforeunload, unload
-- [ ] Resource loading: onload and onerror
+- [x] Page lifecycle: DOMContentLoaded, load, beforeunload, unload
+- [x] **Resource loading: onload and onerror**
 
 ### Forms, controls
 
