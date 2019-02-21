@@ -32,7 +32,7 @@
 - [x] **Moving: mouseover/out, mouseenter/leave**
 - [x] **Drag'n'Drop with mouse events**
 - [x] **Keyboard: keydown and keyup**
-- [ ] Scrolling
+- [x] **Scrolling**
 - [ ] Page lifecycle: DOMContentLoaded, load, beforeunload, unload
 - [ ] Resource loading: onload and onerror
 

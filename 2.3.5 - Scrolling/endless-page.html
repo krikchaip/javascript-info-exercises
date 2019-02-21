@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Endless page</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+    }
+  </style>
+  <body>
+    <h1>Scroll me</h1>
+  </body>
+  <script>
+    const { documentElement } = document
+
+    function createDateDisplay() {
+      const div = document.createElement('div')
+      div.textContent = new Date()
+      document.body.append(div)
+    }
+
+    function appendDate() {
+      while (true) {
+        const { top, bottom } = documentElement.getBoundingClientRect()
+        const { clientHeight } = documentElement
+
+        if (bottom <= clientHeight) {
+          createDateDisplay()
+        } else {
+          break
+        }
+      }
+    }
+
+    window.addEventListener('scroll', e => {
+      appendDate()
+    })
+
+    appendDate()
+  </script>
+</html>
