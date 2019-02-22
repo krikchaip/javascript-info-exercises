@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Deposit calculator</title>
+  </head>
+  <style>
+    td select,
+    td input {
+      width: 150px;
+    }
+
+    #diagram td {
+      vertical-align: bottom;
+      text-align: center;
+      padding: 10px;
+    }
+
+    #diagram div {
+      margin: auto;
+    }
+  </style>
+  <body>
+    Deposit calculator.
+
+    <form name="calculator">
+      <table>
+        <tr>
+          <td>Initial deposit</td>
+          <td>
+            <input name="money" type="number" required />
+          </td>
+        </tr>
+        <tr>
+          <td>How many months?</td>
+          <td>
+            <select name="months">
+              <option value="3">3 (minimum)</option>
+              <option value="6">6 (half-year)</option>
+              <option value="12">12 (one year)</option>
+              <option value="18">18 (1.5 years)</option>
+              <option value="24">24 (2 years)</option>
+              <option value="30">30 (2.5 years)</option>
+              <option value="36">36 (3 years)</option>
+              <option value="60">60 (5 years)</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Interest per year?</td>
+          <td>
+            <input name="interest" type="number" required />
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <table id="diagram">
+      <tr>
+        <th>Was:</th>
+        <th>Becomes:</th>
+      </tr>
+      <tr>
+        <th id="money-before"></th>
+        <th id="money-after"></th>
+      </tr>
+      <td>
+        <div style="background: red;width:40px;height:100px"></div>
+      </td>
+      <td>
+        <div
+          style="background: green;width:40px;height:100px"
+          id="height-after"
+        ></div>
+      </td>
+    </table>
+  </body>
+  <script id="lib">
+    /**
+     * @template a
+     * @typedef {object} State
+     * @property {(f: (x: a) => a) => void} transform
+     * @property {() => a} retrieve
+     * @property {(f: ((curr: a, prev?: a) => void)) => number} subscribe
+     */
+
+    /**
+     * @template a
+     * @param {a} value
+     * @param {((curr: a, prev?: a) => void)[]} [observers]
+     * @return {State<a>}
+     */
+    const createState = (value, observers = []) => ({
+      transform: f => {
+        const [curr, prev] = [f(value), value]
+        observers.forEach(o => o(curr, prev))
+        value = curr
+      },
+      retrieve: () => value,
+      subscribe: f => (observers.push(f), observers.length - 1)
+    })
+
+    /**
+     * @template a
+     * @param {(...args: *) => a} f
+     * @return {(...args: *) => void | a}
+     */
+    const once = f => {
+      let called = false
+      return function(...args) {
+        if (called) return
+        called = true
+        return f(...args)
+      }
+    }
+
+    /**
+     * @template a, b, c
+     * @param {(x: a, y: b) => c} f
+     * @return {(x: b, y: a) => c}
+     */
+    const flip = f => (a, b) => f(b, a)
+  </script>
+  <script>
+    const {
+      money,
+      months,
+      interest
+    } = /** @type {{
+      money: HTMLInputElement,
+      months: HTMLSelectElement,
+      interest: HTMLInputElement
+    }} */ (document.forms.calculator)
+
+    const display = {
+      /** @type {HTMLTableElement} */
+      diagram: document.getElementById('diagram'),
+
+      /** @type {HTMLTableHeaderCellElement} */
+      money_before: document.getElementById('money-before'),
+
+      /** @type {HTMLTableHeaderCellElement} */
+      money_after: document.getElementById('money-after'),
+
+      /** @type {HTMLDivElement} */
+      height_after: document.getElementById('height-after')
+    }
+
+    /** @type {(x: CalculatorState) => number} */
+    const formula = ({ initial, years, interest }) =>
+      Math.round(initial * (1 + (interest * years) / 100))
+
+    /** @type {(currentState: CalculatorState) => void} */
+    const render = currentState => {
+      const { initial, years, interest } = currentState
+      const { money_before, money_after, height_after } = display
+
+      const becomes = formula(currentState)
+      const height = 100 * becomes / initial
+
+      money_before.textContent = initial
+      money_after.textContent = becomes
+      height_after.style.height = `${height}px`
+    }
+
+    /**
+     * @typedef {object} CalculatorState
+     * @property {number} initial
+     * @property {number} years
+     * @property {number} interest
+     */
+
+    /** @type {State<CalculatorState>} */
+    const state = createState({ initial: 10000, years: 1, interest: 5 })
+
+    const actions = {
+      /** @type {(n: number) => void} */
+      setInitial: n => state.transform(old => ({ ...old, initial: n })),
+
+      /** @type {(n: number) => void} */
+      setYears: n => state.transform(old => ({ ...old, years: n })),
+
+      /** @type {(n: number) => void} */
+      setInterest: n => state.transform(old => ({ ...old, interest: n }))
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const st = state.retrieve()
+
+      // initialization
+      money.value = st.initial
+      months.value = st.years * 12
+      interest.value = st.interest
+
+      render(st)
+
+      money.oninput = e => actions.setInitial(+e.target.value)
+      months.oninput = e => actions.setYears(+e.target.value / 12)
+      interest.oninput = e => actions.setInterest(+e.target.value)
+    })
+
+    state.subscribe(flip(console.log)) // log when state is change
+    state.subscribe(render) // change UI in many locations
+  </script>
+</html>
