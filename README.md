@@ -39,6 +39,6 @@
 ### Forms, controls
 
 - [x] **Form properties and methods**
-- [ ] Focusing: focus/blur
+- [x] **Focusing: focus/blur**
 - [ ] Events: change, input, cut, copy, paste
 - [ ] Form submission: event and method submit

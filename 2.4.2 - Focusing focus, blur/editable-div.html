@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Editable div</title>
+  </head>
+  <style>
+    .view,
+    .edit {
+      height: 150px;
+      width: 400px;
+      font-family: sans-serif;
+      font-size: 14px;
+      display: block;
+    }
+
+    .view {
+      /* padding + border = 3px */
+      padding: 2px;
+      border: 1px solid black;
+    }
+
+    .edit {
+      /* replace padding with border (still 3px not to shift the contents) */
+      border: 3px solid blue;
+      padding: 0px;
+    }
+
+    .edit:focus {
+      outline: none;
+      /* remove focus border in Safari */
+    }
+  </style>
+  <body>
+    <ul>
+      <li>Click the div to edit.</li>
+      <li>Enter or blur saves the result.</li>
+    </ul>
+
+    HTML is allowed.
+
+    <div id="view" class="view">Text</div>
+  </body>
+  <script>
+    // Note: <textarea> should have class="edit"
+
+    /** @type {HTMLDivElement} */
+    const view = document.querySelector('.view')
+
+    view.onclick = function() {
+      const edit = document.createElement('textarea')
+
+      edit.onblur = function() {
+        view.innerHTML = edit.value
+        edit.style.display = 'none'
+        view.style.display = 'block'
+        edit.remove()
+      }
+
+      view.style.display = 'none'
+      edit.className = 'edit'
+      edit.innerHTML = view.innerHTML
+
+      view.after(edit)
+      edit.focus()
+    }
+  </script>
+</html>
