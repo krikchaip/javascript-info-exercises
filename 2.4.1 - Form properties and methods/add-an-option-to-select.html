@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Add an option to select</title>
+  </head>
+  <body>
+    <select id="genres">
+      <option value="rock">Rock</option>
+      <option value="blues" selected>Blues</option>
+    </select>
+  </body>
+  <script>
+    /** @type {HTMLSelectElement} */
+    const genres = document.getElementById('genres')
+
+    Array.from(genres.options)
+      .filter(option => option.selected)
+      .forEach(x => {
+        console.log(x.value, x.innerText)
+        x.selected = false
+      })
+
+    genres.insertAdjacentHTML(
+      'beforeend',
+      `<option selected value="classic">Classic</option>`
+    )
+  </script>
+</html>
