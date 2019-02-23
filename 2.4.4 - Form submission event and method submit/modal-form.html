@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Modal form</title>
+  </head>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    #prompt-form {
+      display: inline-block;
+      padding: 5px 5px 5px 70px;
+      width: 200px;
+      border: 1px solid black;
+      background: white url(https://en.js.cx/clipart/prompt.png) no-repeat left
+        5px;
+      vertical-align: middle;
+      box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
+    }
+
+    #prompt-form-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+
+    #prompt-form-container:before {
+      display: inline-block;
+      height: 100%;
+      content: '';
+      vertical-align: middle;
+    }
+
+    #prompt-form input[name='text'] {
+      display: block;
+      margin: 5px;
+      width: 180px;
+      outline: none;
+    }
+  </style>
+  <body>
+    <h2>Click the button below</h2>
+    <input
+      tabindex="-1"
+      type="button"
+      value="Click to show the form"
+      id="show-button"
+    />
+  </body>
+  <script>
+    /**
+     * @param {{ message: string }} props
+     * @return {HTMLDivElement}
+     */
+    function Modal({ message }) {
+      const modal = document.createElement('template')
+      const html = `
+        <div id="prompt-form-container">
+          <form id="prompt-form" onsubmit="return false">
+            <div id="prompt-message">${message}</div>
+            <input name="text" type="text" />
+            <input type="submit" value="Ok" />
+            <input type="button" name="cancel" value="Cancel" />
+          </form>
+        </div>
+      `
+
+      modal.innerHTML = html.trim()
+
+      return modal.content.firstChild
+    }
+
+    /**
+     * @param {string} html
+     * @param {(value: string) => void} callback
+     * @return {void}
+     */
+    function showPrompt(html, callback) {
+      const modal = Modal({ message: html })
+
+      /** @type {HTMLInputElement} */
+      const modal_text = modal.querySelector('input[type="text"]')
+
+      /** @type {HTMLInputElement} */
+      const modal_submit = modal.querySelector('input[type="submit"]')
+
+      /** @type {HTMLInputElement} */
+      const modal_cancel = modal.querySelector('input[type="button"]')
+
+      const formitems = [modal_text, modal_submit, modal_cancel]
+
+      modal_submit.onclick = e => {
+        e.preventDefault()
+        if (!modal_text.value) return
+        callback(modal_text.value)
+        modal.remove()
+      }
+
+      modal_cancel.onclick = () => {
+        callback(null)
+        modal.remove()
+      }
+
+      document.onkeyup = e => {
+        if (e.code !== 'Escape') return
+        callback(null)
+        modal.remove()
+        document.onkeyup = null
+      }
+
+      document.body.append(modal)
+      formitems.forEach((input, idx) => {
+        input.onkeydown = e => {
+          if (e.key === 'Tab') {
+            e.preventDefault()
+          } else if (e.shiftKey && e.key === 'Tab') {
+            e.preventDefault()
+          }
+        }
+        input.onkeyup = e => {
+          if (e.key === 'Tab') {
+            if (idx === formitems.length - 1) {
+              formitems[0].focus()
+            } else {
+              formitems[idx + 1].focus()
+            }
+          } else if (e.shiftKey && e.key === 'Tab') {
+            if (idx === 0) {
+              formitems[formitems.length - 1].focus()
+            } else {
+              formitems[idx - 1].focus()
+            }
+          }
+        }
+      })
+
+      formitems[0].focus()
+    }
+
+    const showButton = document.getElementById('show-button')
+
+    showButton.onclick = () =>
+      showPrompt('Enter something<br>...smart :)', value => alert(value))
+  </script>
+</html>

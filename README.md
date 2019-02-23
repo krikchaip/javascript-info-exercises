@@ -41,4 +41,4 @@
 - [x] **Form properties and methods**
 - [x] **Focusing: focus/blur**
 - [x] **Events: change, input, cut, copy, paste**
-- [ ] Form submission: event and method submit
+- [x] **Form submission: event and method submit**
